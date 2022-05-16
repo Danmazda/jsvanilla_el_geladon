@@ -16,6 +16,9 @@ body {
   padding: 1em;
   background-color: #e8e6fe;
 }
+header{
+  margin-bottom: 0.5em;
+}
 header .logo {
   height: 5em;
   transform: rotateZ(35deg);
@@ -32,6 +35,8 @@ input {
   align-items: center;
 }
 
+
+
 .menu {
   position: relative;
   display: flex;
@@ -41,8 +46,15 @@ input {
   margin-bottom: 0.3em;
 }
 .menu .cart {
+  position: fixed;
+  bottom: 1em;
+  right: 2em;
+  z-index: 999;
   font-size: 2em;
   color: #8f0791;
+  background-color: #fff;
+  padding: 0.3em;
+  border-radius: 99em;
 }
 .menu .cart:hover {
   cursor: pointer;
@@ -63,7 +75,7 @@ main {
   );
   text-align: center;
   border-radius: 1em;
-  min-height: calc(100vh -1px);
+  padding: 1em;
 }
 #flavors {
   position: relative;
@@ -105,11 +117,13 @@ fieldset {
   gap: 0.5em;
 }
 button {
+  display: flex;
   padding: 0.4em;
   border: none;
   border-radius: 0.5em;
   background-color: #8f0791;
   color: #ffff;
+  font-size: 1.2em;
 }
 button:hover {
   cursor: pointer;
@@ -156,10 +170,10 @@ footer {
   height: 7em;
 }
 .update {
-  position: absolute;
-  right: -0.1em;
-  bottom: -0.5em;
-  z-index: 99;
+  position: fixed;
+  right: 3.5em;
+  bottom: 1.5em;
+  z-index: 999;
   width: 1.5em;
   height: 1.5em;
   border-radius: 99%;

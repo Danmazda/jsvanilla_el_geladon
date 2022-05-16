@@ -1,5 +1,7 @@
 const baseUrl = "http://localhost:3000/paletas";
 const flavorsSection = document.querySelector("#flavors");
+const flavorsTitle = document.querySelector("h2");
+
 //Cart Fuctionality
 const userCart = [];
 const cartLogo = document.querySelector(".cart");
@@ -13,7 +15,6 @@ let totalPaletas = 0;
 
 //Search
 const searchInput = document.querySelector("#search");
-const searchResults = document.querySelector(".searchResults");
 
 fetchPaletas();
 
@@ -25,10 +26,13 @@ cartLogo.addEventListener("click", () => {
   }
 });
 
-
 searchInput.addEventListener("input", (e) => {
   let value = e.target.value;
-
+  if (!value) {
+    flavorsTitle.innerText = "All Flavors";
+  } else {
+    flavorsTitle.innerText = "Search Results";
+  }
   searchFor(value);
 });
 
@@ -43,7 +47,7 @@ async function fetchPaletas() {
     <p>${paleta.descricao}</p>
     <div class="priceAndAdd">
       <p class="price">R$${paleta.preco.toFixed(2)}</p>
-      <button onclick="fetchPaletaID(${paleta.id})">Add to cart</button>
+      <button onclick="fetchPaletaID(${paleta.id})"><i class="fa-solid fa-cart-plus"></i></button>
     </div>
     </div>`;
     const div = document.createElement("div");
@@ -64,7 +68,7 @@ async function fetchPaletaID(id) {
       <img src="${paleta.foto}" alt="Paleta Sabor ${paleta.sabor}">
       <h3>${paleta.sabor}</h3>
       <p class="price">R$${paleta.preco.toFixed(2)}</p>
-      <button>delete</button>
+      <button><i class="fa-solid fa-trash-can"></i></button>
     </div>`;
   const div = document.createElement("div");
   div.innerHTML = htmlString;
