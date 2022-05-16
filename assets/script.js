@@ -11,7 +11,6 @@ const cartTotal = document.querySelector(".cartTotal");
 const cartItems = document.querySelector(".cartItems");
 const updateCounter = document.querySelector(".update");
 let total = 0;
-let totalPaletas = 0;
 
 //Search
 const searchInput = document.querySelector("#search");
@@ -61,15 +60,24 @@ async function fetchPaletas() {
 async function fetchPaletaID(id) {
   const response = await fetch(`${baseUrl}/${id}`);
   const paleta = await response.json();
+  // if(userCart.includes(paleta)){
+  //   const quantity = userCart.reduce()
+  // }
   userCart.push(paleta);
+  const quantity = userCart.filter((p) => p === paleta).length;
   if (deleteOn) {
     deleteOn.remove();
   }
   total += paleta.preco;
-  const htmlString = `<div class="itemMenu" key='${paleta.id}'>
+  const htmlString = `<div class="itemMenu">
       <img src="${paleta.foto}" alt="Paleta Sabor ${paleta.sabor}">
       <h3>${paleta.sabor}</h3>
       <p class="price">R$${paleta.preco.toFixed(2)}</p>
+      <div class="counterHolder" key='${paleta.id}'>
+        <i class="fa-solid fa-plus" onclick="oneMore(this)"></i>
+        <p class="quantity">${quantity}</p>
+        <i class="fa-solid fa-minus" onclick="oneLess(this)"></i>
+      </div>
       <button onclick="deleteElement(this, ${
         paleta.id
       })"><i class="fa-solid fa-trash-can"></i></button>
@@ -98,5 +106,43 @@ function searchFor(query) {
 function deleteElement(e, id) {
   e.parentElement.remove();
   const deletePaleta = userCart.find((p) => p.id === id);
+  total -= deletePaleta.preco;
+  cartTotal.innerText = `Total: R$${total.toFixed(2)}`;
   userCart.splice(userCart.indexOf(deletePaleta), 1);
+}
+
+function oneMore(e) {
+  const div = e.parentElement;
+  const p = div.children[1];
+  const count = Number(p.innerText);
+  const id = Number(div.getAttribute("key"));
+  const plus = userCart.find((p) => p.id === Number(id));
+  userCart.push(plus);
+  p.innerText = `${count + 1}`;
+  updateTotal();
+}
+function oneLess(e) {
+  const div = e.parentElement;
+  const p = div.children[1];
+  const count = Number(p.innerText);
+  const id = Number(div.getAttribute("key"));
+  if (count - 1 === 0) {
+    deleteElement(div, id);
+  } else {
+    const less = userCart.find((p) => p.id === Number(id));
+    userCart.splice(userCart.indexOf(less), 1);
+    p.innerText = `${count - 1}`;
+  }
+  updateTotal();
+}
+function updateTotal() {
+  total = 0;
+  userCart.forEach((p) => {
+    total += p.preco;
+  });
+  cartTotal.innerText = `Total: R$${total.toFixed(2)}`;
+}
+function updateQuatity(num) {
+  const quantityP = document.querySelector(".quantity");
+  quantityP.innerText = `${num}`;
 }
