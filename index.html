@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/8a7e40051d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./assets/style.css" />
+    <title>El geladon</title>
+  </head>
+  <body>
+    <header>
+      <div class="title">
+        <h1>El geladon</h1>
+        <img
+          src="./assets/images/icons/logo.svg"
+          alt="El geladon logo"
+          class="logo"
+        />
+      </div>
+      <div class="menu">
+        <form action="" method="get">
+          <fieldset>
+            <label for="search">Search</label>
+            <input type="text" name="search" id="search" />
+          </fieldset>
+          <button type="submit" class="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+        <i class="fa-solid fa-cart-shopping cart"></i>
+        <div class="update hidden">0</div>
+      </div>
+    </header>
+    <main>
+      <div class="cartMenu hidden">
+        <h3>Items in cart</h3>
+        <div class="cartItems hidden"></div>
+        <p class="deleteOn">No items in cart...</p>
+        <p class="cartTotal"> Total: R$0.00</p>
+      </div>
+      <div class="searchResults"></div>
+      <h2>All Flavors</h2>
+      <section id="flavors"></section>
+    </main>
+    <footer>El Geladon 2022</footer>
+  </body>
+  <script src="./assets/script.js"></script>
+</html>
