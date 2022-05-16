@@ -40,14 +40,14 @@ input {
   gap: 1em;
   margin-bottom: 0.3em;
 }
-.menu i {
+.menu .cart {
   font-size: 2em;
   color: #8f0791;
 }
-.menu i:hover {
+.menu .cart:hover {
   cursor: pointer;
   transform: scale(1.1);
-  color: white;
+  color: rgb(0, 0, 0);
 }
 .menu .fa-magnifying-glass {
   font-size: 1.5em;
@@ -98,13 +98,11 @@ main {
   align-items: center;
   justify-content: center;
 }
-form {
-  display: flex;
-  align-items: center;
-  gap: 1em;
-}
+
 fieldset {
   border: none;
+  display: flex;
+  gap: 0.5em;
 }
 button {
   padding: 0.4em;

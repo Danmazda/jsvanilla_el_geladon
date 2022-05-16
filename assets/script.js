@@ -13,7 +13,6 @@ let totalPaletas = 0;
 
 //Search
 const searchInput = document.querySelector("#search");
-const searchButton = document.querySelector(".submit");
 const searchResults = document.querySelector(".searchResults");
 
 fetchPaletas();
@@ -26,24 +25,18 @@ cartLogo.addEventListener("click", () => {
   }
 });
 
-searchButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  searchFor(searchInput.value);
-});
 
-searchInput.addEventListener("input", () => {
-  if (searchInput.value === "") {
-    while (searchResults.lastChild) {
-      searchResults.removeChild();
-    }
-  }
+searchInput.addEventListener("input", (e) => {
+  let value = e.target.value;
+
+  searchFor(value);
 });
 
 //Functions
 async function fetchPaletas() {
   const response = await fetch(`${baseUrl}/all`);
-  const paletas = await response.json();
-  paletas.forEach((paleta) => {
+  const allPaletas = await response.json();
+  allPaletas.forEach((paleta) => {
     const htmlString = `<div class="container">
     <img src="${paleta.foto}" alt="Paleta Sabor ${paleta.sabor}">
     <h3>${paleta.sabor}</h3>
@@ -86,23 +79,10 @@ async function fetchPaletaID(id) {
 }
 
 async function searchFor(query) {
-  const title = document.createElement("h2");
-  title.innerText = "Search Result";
-  searchResults.insertAdjacentElement("afterbegin", title);
-  const response = await fetch(`${baseUrl}/find/${query}`);
-  const paletasFound = await response.json();
-  paletasFound.forEach((paleta) => {
-    const htmlString = `<div class="container">
-    <img src="${paleta.foto}" alt="Paleta Sabor ${paleta.sabor}">
-    <h3>${paleta.sabor}</h3>
-    <p>${paleta.descricao}</p>
-    <div class="priceAndAdd">
-      <p class="price">R$${paleta.preco.toFixed(2)}</p>
-      <button onclick="fetchPaletaID(${paleta.id})">Add to cart</button>
-    </div>
-    </div>`;
-    const div = document.createElement("div");
-    div.innerHTML = htmlString;
-    searchResults.insertAdjacentElement("beforeend", div);
+  const paletas = document.querySelectorAll(".container");
+  const searchQuery = new RegExp(`${query}`, "i");
+  paletas.forEach((paleta) => {
+    const result = searchQuery.test(paleta.children[1].textContent);
+    paleta.classList.toggle("hidden", !result);
   });
 }
