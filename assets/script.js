@@ -47,7 +47,9 @@ async function fetchPaletas() {
     <p>${paleta.descricao}</p>
     <div class="priceAndAdd">
       <p class="price">R$${paleta.preco.toFixed(2)}</p>
-      <button onclick="fetchPaletaID(${paleta.id})"><i class="fa-solid fa-cart-plus"></i></button>
+      <button onclick="fetchPaletaID(${
+        paleta.id
+      })"><i class="fa-solid fa-cart-plus"></i></button>
     </div>
     </div>`;
     const div = document.createElement("div");
@@ -68,7 +70,9 @@ async function fetchPaletaID(id) {
       <img src="${paleta.foto}" alt="Paleta Sabor ${paleta.sabor}">
       <h3>${paleta.sabor}</h3>
       <p class="price">R$${paleta.preco.toFixed(2)}</p>
-      <button><i class="fa-solid fa-trash-can"></i></button>
+      <button onclick="deleteElement(this, ${
+        paleta.id
+      })"><i class="fa-solid fa-trash-can"></i></button>
     </div>`;
   const div = document.createElement("div");
   div.innerHTML = htmlString;
@@ -82,11 +86,17 @@ async function fetchPaletaID(id) {
   }, 1000);
 }
 
-async function searchFor(query) {
+function searchFor(query) {
   const paletas = document.querySelectorAll(".container");
   const searchQuery = new RegExp(`${query}`, "i");
   paletas.forEach((paleta) => {
     const result = searchQuery.test(paleta.children[1].textContent);
     paleta.classList.toggle("hidden", !result);
   });
+}
+
+function deleteElement(e, id) {
+  e.parentElement.remove();
+  const deletePaleta = userCart.find((p) => p.id === id);
+  userCart.splice(userCart.indexOf(deletePaleta), 1);
 }
