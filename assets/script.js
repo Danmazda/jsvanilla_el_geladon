@@ -3,7 +3,6 @@ const flavorsSection = document.querySelector("#flavors");
 const flavorsTitle = document.querySelector("h2");
 
 //Cart Fuctionality
-const userCart = [];
 const cartLogo = document.querySelector(".cart");
 const cartMenu = document.querySelector(".cartMenu");
 const deleteOn = document.querySelector(".deleteOn");
@@ -16,6 +15,7 @@ let total = 0;
 const searchInput = document.querySelector("#search");
 
 fetchPaletas();
+updateCart();
 
 cartLogo.addEventListener("click", () => {
   if (cartMenu.classList.contains("hidden")) {
@@ -46,7 +46,7 @@ async function fetchPaletas() {
     <p>${paleta.descricao}</p>
     <div class="priceAndAdd">
       <p class="price">R$${paleta.preco.toFixed(2)}</p>
-      <button onclick="fetchPaletaID(${
+      <button onclick="addPaletaIDCart(${
         paleta.id
       })"><i class="fa-solid fa-cart-plus"></i></button>
     </div>
@@ -57,55 +57,21 @@ async function fetchPaletas() {
   });
 }
 
-async function fetchPaletaID(id) {
-  const response = await fetch(`${baseUrl}paletas/${id}`);
-  const paleta = await response.json();
-  let includes = false;
-  userCart.forEach((p) => {
-    if (p.id === paleta.id) {
-      includes = true;
-    }
-  });
-  if (includes) {
-    console.log("gggggggggg");
-    userCart.push(paleta);
-    const quantity = userCart.filter((p) => p === paleta).length;
-    updateQuatity(quantity);
-  } else {
-    userCart.push(paleta);
-    const quantity = userCart.filter((p) => p === paleta).length;
-    const htmlString = `<div class="itemMenu">
-      <img src="${paleta.foto}" alt="Paleta Sabor ${paleta.sabor}">
-      <h3>${paleta.sabor}</h3>
-      <p class="price">R$${paleta.preco.toFixed(2)}</p>
-      <div class="counterHolder" key='${paleta.id}'>
-        <i class="fa-solid fa-plus" onclick="oneMore(this)"></i>
-        <p class="quantity">${quantity}</p>
-        <i class="fa-solid fa-minus" onclick="oneLess(this)"></i>
-      </div>
-      <button onclick="deleteElement(this, ${
-        paleta.id
-      })"><i class="fa-solid fa-trash-can"></i></button>
-    </div>`;
-    const div = document.createElement("div");
-    div.innerHTML = htmlString;
-    cartItems.insertAdjacentElement("afterbegin", div);
-    cartItems.classList.remove("hidden");
-
+async function addPaletaIDCart(id) {
+  const response = await axios.post(`${baseUrl}user/add/${id}`);
+  const cart = response.data;
+  if (response.status === 200) {
+    updateCounter.innerText = `${cart.length}`;
+    updateCounter.classList.remove("hidden");
+    setTimeout(() => {
+      updateCounter.classList.add("hidden");
+    }, 1000);
+    updateCart();
   }
-
   if (deleteOn) {
     deleteOn.remove();
   }
-
-  updateTotal();
-
-  updateCounter.innerText = `${userCart.length}`;
-  updateCounter.classList.remove("hidden");
-  console.log(userCart);
-  setTimeout(() => {
-    updateCounter.classList.add("hidden");
-  }, 1000);
+  updateTotal(cart);
 }
 
 function searchFor(query) {
@@ -117,12 +83,10 @@ function searchFor(query) {
   });
 }
 
-function deleteElement(e, id) {
+async function deleteAllCart(e, id) {
   e.parentElement.remove();
-  const deletePaleta = userCart.find((p) => p.id === id);
-  total -= deletePaleta.preco;
-  cartTotal.innerText = `Total: R$${total.toFixed(2)}`;
-  userCart.splice(userCart.indexOf(deletePaleta), 1);
+  const response = axios.post(`${baseUrl}user/deleteAll/${id}`);
+  updateCart();
 }
 
 function oneMore(e) {
@@ -149,16 +113,13 @@ function oneLess(e) {
   }
   updateTotal();
 }
-function updateTotal() {
+
+function updateTotal(userCart) {
   total = 0;
   userCart.forEach((p) => {
     total += p.preco;
   });
   cartTotal.innerText = `Total: R$${total.toFixed(2)}`;
-}
-function updateQuatity(num) {
-  const quantityP = document.querySelector(".quantity");
-  quantityP.innerText = `${num}`;
 }
 
 async function fetchUserCart() {
@@ -166,4 +127,34 @@ async function fetchUserCart() {
   const user = await response.json();
   return user;
 }
-fetchUserCart();
+
+async function updateCart() {
+  let userCart = await fetchUserCart();
+  if (userCart.length === 0 && !deleteOn) {
+    const deleteOn = document.createElement("p");
+    deleteOn.innerText = "No items in cart";
+    cartMenu.appendChild(deleteOn);
+  } else {
+    deleteOn.remove();
+  }
+  userCart.forEach((paleta) => {
+    const htmlString = `<div class="itemMenu">
+      <img src="${paleta.foto}" alt="Paleta Sabor ${paleta.sabor}">
+      <h3>${paleta.sabor}</h3>
+      <p class="price">R$${paleta.preco.toFixed(2)}</p>
+      <div class="counterHolder" key='${paleta.id}'>
+        <i class="fa-solid fa-plus" onclick="oneMore(this)"></i>
+        <p class="quantity">${paleta.quantity}</p>
+        <i class="fa-solid fa-minus" onclick="oneLess(this)"></i>
+      </div>
+      <button onclick="deleteAllCart(this, ${
+        paleta.id
+      })"><i class="fa-solid fa-trash-can"></i></button>
+    </div>`;
+    const div = document.createElement("div");
+    div.innerHTML = htmlString;
+    cartItems.insertAdjacentElement("afterbegin", div);
+    cartItems.classList.remove("hidden");
+  });
+  updateTotal(userCart);
+}
