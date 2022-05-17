@@ -9,7 +9,6 @@ const deleteOn = document.querySelector(".deleteOn");
 const cartTotal = document.querySelector(".cartTotal");
 const cartItems = document.querySelector(".cartItems");
 const updateCounter = document.querySelector(".update");
-let total = 0;
 
 //Search
 const searchInput = document.querySelector("#search");
@@ -46,7 +45,7 @@ async function fetchPaletas() {
     <p>${paleta.descricao}</p>
     <div class="priceAndAdd">
       <p class="price">R$${paleta.preco.toFixed(2)}</p>
-      <button onclick="addPaletaIDCart(${
+      <button onclick="PaletaIDCart(${
         paleta.id
       })"><i class="fa-solid fa-cart-plus"></i></button>
     </div>
@@ -57,19 +56,23 @@ async function fetchPaletas() {
   });
 }
 
-async function addPaletaIDCart(id) {
-  const response = await axios.post(`${baseUrl}user/add/${id}`);
+async function PaletaIDCart(id, del = false) {
+  let response;
+  del
+    ? (response = await axios.post(`${baseUrl}user/deleteOne/${id}`))
+    : (response = await axios.post(`${baseUrl}user/add/${id}`));
   const cart = response.data;
   if (response.status === 200) {
-    updateCounter.innerText = `${cart.length}`;
+    let count = 0;
+    cart.forEach(p=>{
+      count += p.quantity;
+    });
+    updateCounter.innerText = `${count}`;
     updateCounter.classList.remove("hidden");
     setTimeout(() => {
       updateCounter.classList.add("hidden");
     }, 1000);
     updateCart();
-  }
-  if (deleteOn) {
-    deleteOn.remove();
   }
   updateTotal(cart);
 }
@@ -89,35 +92,10 @@ async function deleteAllCart(e, id) {
   updateCart();
 }
 
-function oneMore(e) {
-  const div = e.parentElement;
-  const p = div.children[1];
-  const count = Number(p.innerText);
-  const id = Number(div.getAttribute("key"));
-  const plus = userCart.find((p) => p.id === Number(id));
-  userCart.push(plus);
-  p.innerText = `${count + 1}`;
-  updateTotal();
-}
-function oneLess(e) {
-  const div = e.parentElement;
-  const p = div.children[1];
-  const count = Number(p.innerText);
-  const id = Number(div.getAttribute("key"));
-  if (count - 1 === 0) {
-    deleteElement(div, id);
-  } else {
-    const less = userCart.find((p) => p.id === Number(id));
-    userCart.splice(userCart.indexOf(less), 1);
-    p.innerText = `${count - 1}`;
-  }
-  updateTotal();
-}
-
 function updateTotal(userCart) {
-  total = 0;
+  let total = 0;
   userCart.forEach((p) => {
-    total += p.preco;
+    total += p.preco * p.quantity;
   });
   cartTotal.innerText = `Total: R$${total.toFixed(2)}`;
 }
@@ -129,6 +107,9 @@ async function fetchUserCart() {
 }
 
 async function updateCart() {
+  while (cartItems.lastChild) {
+    cartItems.firstChild.remove();
+  }
   let userCart = await fetchUserCart();
   if (userCart.length === 0 && !deleteOn) {
     const deleteOn = document.createElement("p");
@@ -143,9 +124,11 @@ async function updateCart() {
       <h3>${paleta.sabor}</h3>
       <p class="price">R$${paleta.preco.toFixed(2)}</p>
       <div class="counterHolder" key='${paleta.id}'>
-        <i class="fa-solid fa-plus" onclick="oneMore(this)"></i>
+        <i class="fa-solid fa-plus" onclick="PaletaIDCart(${paleta.id})"></i>
         <p class="quantity">${paleta.quantity}</p>
-        <i class="fa-solid fa-minus" onclick="oneLess(this)"></i>
+        <i class="fa-solid fa-minus" onclick="PaletaIDCart(${
+          paleta.id
+        }, ${true})"></i>
       </div>
       <button onclick="deleteAllCart(this, ${
         paleta.id
