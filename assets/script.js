@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3000/paletas";
+const baseUrl = "http://localhost:3000/";
 const flavorsSection = document.querySelector("#flavors");
 const flavorsTitle = document.querySelector("h2");
 
@@ -37,7 +37,7 @@ searchInput.addEventListener("input", (e) => {
 
 //Functions
 async function fetchPaletas() {
-  const response = await fetch(`${baseUrl}/all`);
+  const response = await fetch(`${baseUrl}paletas/all`);
   const allPaletas = await response.json();
   allPaletas.forEach((paleta) => {
     const htmlString = `<div class="container">
@@ -58,18 +58,23 @@ async function fetchPaletas() {
 }
 
 async function fetchPaletaID(id) {
-  const response = await fetch(`${baseUrl}/${id}`);
+  const response = await fetch(`${baseUrl}paletas/${id}`);
   const paleta = await response.json();
-  // if(userCart.includes(paleta)){
-  //   const quantity = userCart.reduce()
-  // }
-  userCart.push(paleta);
-  const quantity = userCart.filter((p) => p === paleta).length;
-  if (deleteOn) {
-    deleteOn.remove();
-  }
-  total += paleta.preco;
-  const htmlString = `<div class="itemMenu">
+  let includes = false;
+  userCart.forEach((p) => {
+    if (p.id === paleta.id) {
+      includes = true;
+    }
+  });
+  if (includes) {
+    console.log("gggggggggg");
+    userCart.push(paleta);
+    const quantity = userCart.filter((p) => p === paleta).length;
+    updateQuatity(quantity);
+  } else {
+    userCart.push(paleta);
+    const quantity = userCart.filter((p) => p === paleta).length;
+    const htmlString = `<div class="itemMenu">
       <img src="${paleta.foto}" alt="Paleta Sabor ${paleta.sabor}">
       <h3>${paleta.sabor}</h3>
       <p class="price">R$${paleta.preco.toFixed(2)}</p>
@@ -82,13 +87,22 @@ async function fetchPaletaID(id) {
         paleta.id
       })"><i class="fa-solid fa-trash-can"></i></button>
     </div>`;
-  const div = document.createElement("div");
-  div.innerHTML = htmlString;
-  cartItems.classList.remove("hidden");
-  cartItems.insertAdjacentElement("afterbegin", div);
-  cartTotal.innerText = `Total: R$${total.toFixed(2)}`;
+    const div = document.createElement("div");
+    div.innerHTML = htmlString;
+    cartItems.insertAdjacentElement("afterbegin", div);
+    cartItems.classList.remove("hidden");
+
+  }
+
+  if (deleteOn) {
+    deleteOn.remove();
+  }
+
+  updateTotal();
+
   updateCounter.innerText = `${userCart.length}`;
   updateCounter.classList.remove("hidden");
+  console.log(userCart);
   setTimeout(() => {
     updateCounter.classList.add("hidden");
   }, 1000);
@@ -146,3 +160,10 @@ function updateQuatity(num) {
   const quantityP = document.querySelector(".quantity");
   quantityP.innerText = `${num}`;
 }
+
+async function fetchUserCart() {
+  const response = await fetch(`${baseUrl}user/all`);
+  const user = await response.json();
+  return user;
+}
+fetchUserCart();
