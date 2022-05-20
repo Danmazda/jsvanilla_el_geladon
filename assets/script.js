@@ -22,7 +22,7 @@ const password = document.querySelector("[type='password']");
 
 //Admin
 const adminSection = document.querySelector("#admin");
-const submitButton = document.querySelector("[type='submit']");
+
 loginBt.addEventListener("click", () => {
   loginMenu.classList.toggle("hidden");
 });
@@ -188,30 +188,35 @@ async function fetchPaletasAdmin() {
     <p class="price">R$${paleta.price.toFixed(2)}</p>
     <p>ID: ${paleta._id}</p>
     <div class="paletaControl">
-      <button onclick="updatePaleta(${paleta})">Update</button>
+      <button onclick="showUpdate(this)">Update</button>
       <button onclick="deletePaleta('${paleta._id}')">Delete</button>
     </div>
     </div>
     `;
-    const paletaUpdateForm = `<form action="/" method="post" class="hidden">
+    const paletaUpdateForm = `<form action="/" method="post" class="updateForm hidden">
     <h3>Update:</h3>
     <fieldset>
       <label for="flavor"> Flavor</label>
       <input type="text" name="flavor" required value="${paleta.flavor}"/>
     </fieldset>
     <fieldset>
-      <label for="image"> Image Url</label>
+      <label for="image"> Image</label>
       <input type="text" name="image" required value="${paleta.image}"/>
     </fieldset>
     <fieldset>
       <label for="description"> Description</label>
-      <input type="text" name="description" required  value="${paleta.description}"/>
+      <input type="text" name="description" required  value="${
+        paleta.description
+      }"/>
     </fieldset>
     <fieldset>
       <label for="price"> Price</label>
-      <input type="number" name="price" min="1" max="100" step="0.1" required value="${Number(paleta.price)}"/>
+      <input type="number" name="price" min="1" max="100" step="0.1" required value="${Number(
+        paleta.price
+      )}"/>
     </fieldset>
-    <button type="submit">Send</button>
+    <input value="${paleta._id}" name="id" hidden>
+    <button type="submit" >Send</button>
   </form>`;
     const divForm = document.createElement("div");
     divForm.innerHTML = paletaUpdateForm;
@@ -219,6 +224,43 @@ async function fetchPaletasAdmin() {
     div.innerHTML = htmlString;
     div.appendChild(divForm);
     adminSection.insertAdjacentElement("beforeend", div);
+  });
+  document.querySelectorAll(".updateForm").forEach((form) => {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const id = formData.get("id");
+      const reqBody = {
+        price: formData.get("price"),
+        image: formData.get("image"),
+        description: formData.get("description"),
+        flavor: formData.get("flavor"),
+      };
+      const response = await fetch(`${baseUrl}paletas/update/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
+      });
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Paleta Updated!",
+          icon: "success",
+          confirmButtonText: "Cool",
+        });
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to update paleta",
+          icon: "error",
+          confirmButtonText: "Cool",
+        });
+      }
+      form.classList.toggle("hidden");
+      fetchPaletas();
+      fetchPaletasAdmin();
+    });
   });
 }
 async function logOut() {
@@ -261,7 +303,7 @@ document.querySelector("form").addEventListener("submit", async (e) => {
 
 async function deletePaleta(id) {
   const modal = await Swal.fire({
-    title: "Delete cannot be reversed",
+    title: "This action cannot be undone!",
     text: "are you sure you want to delete?",
     icon: "warning",
     showCancelButton: true,
@@ -294,9 +336,9 @@ async function deletePaleta(id) {
     fetchPaletasAdmin();
   }
 }
-async function updatePaleta(paleta) {
-  const htmlString = ``;
-  const div = document.createElement("div");
-  div.innerHTML = htmlString;
-  document.body.appendChild(div);
+
+function showUpdate(e) {
+  const updateForm =
+    e.parentElement.parentElement.nextElementSibling.firstChild;
+  updateForm.classList.toggle("hidden");
 }
