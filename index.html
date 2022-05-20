@@ -8,13 +8,24 @@
       src="https://kit.fontawesome.com/8a7e40051d.js"
       crossorigin="anonymous"
     ></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="./assets/style.css" />
     <title>El geladon</title>
   </head>
   <body>
     <header>
-      <a href="/">Login</a>
+      <button class="login">Login</button>
+      <div class="loginMenu hidden">
+        <h3>Log into admin area</h3>
+        <fieldset>
+          <label for="user">E-mail</label>
+          <input type="email" name="user" />
+          <label for="password">Password</label>
+          <input type="password" name="password" />
+          <button class="sendLoginCredential">send</button>
+        </fieldset>
+      </div>
       <div class="title">
         <h1>El geladon</h1>
         <img
@@ -35,6 +46,32 @@
       </div>
     </header>
     <main>
+      <section id="admin" class="">
+        <div>
+          <h2>Admin area</h2>
+          <button class="logOut" onclick="logOut()">log Out</button>
+        </div>
+        <form action="/" method="post">
+          <h3>Create new Paleta:</h3>
+          <fieldset>
+            <label for="flavor"> Flavor</label>
+            <input type="text" name="flavor" required />
+          </fieldset>
+          <fieldset>
+            <label for="image"> Image Url</label>
+            <input type="text" name="image" required />
+          </fieldset>
+          <fieldset>
+            <label for="description"> Description</label>
+            <input type="text" name="description" required />
+          </fieldset>
+          <fieldset>
+            <label for="price"> Price</label>
+            <input type="number" name="price" min="1" max="100" step="0.1" required />
+          </fieldset>
+          <button type="submit">Send</button>
+        </form>
+      </section>
       <div class="cartMenu hidden">
         <h3>Items in cart</h3>
         <div class="cartItems hidden"></div>
@@ -48,4 +85,3 @@
   </body>
   <script src="./assets/script.js"></script>
 </html>
-
