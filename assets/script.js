@@ -17,22 +17,41 @@ const searchInput = document.querySelector("#search");
 const loginBt = document.querySelector(".login");
 const loginMenu = document.querySelector(".loginMenu");
 const sendLoginCredential = document.querySelector(".sendLoginCredential");
-const email = document.querySelector("[type='email']");
-const password = document.querySelector("[type='password']");
+const emailInput = document.querySelector("[type='email']");
+const passwordInput = document.querySelector("[type='password']");
 
 //Admin
 const adminSection = document.querySelector("#admin");
+let token = "";
 
 loginBt.addEventListener("click", () => {
   loginMenu.classList.toggle("hidden");
 });
 
 sendLoginCredential.addEventListener("click", async () => {
-  const emailValue = email.value;
-  const passwordValue = password.value;
-  console.log({ email: emailValue, password: passwordValue });
-  adminSection.classList.remove("hidden");
-  loginMenu.classList.toggle("hidden");
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  const response = await fetch(`${baseUrl}user/signin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
+  const resObj = await response.json();
+  if (resObj.log && resObj.role === "admin") {
+    token = resObj.token;
+    console.log(token);
+    adminSection.classList.remove("hidden");
+    loginMenu.classList.toggle("hidden");
+  } else {
+    Swal.fire({
+      title: "Error!",
+      text: "Email or password invalid!",
+      icon: "error",
+      confirmButtonText: "Ok",
+    });
+  }
 });
 fetchPaletas();
 fetchPaletasAdmin();
@@ -129,7 +148,7 @@ async function deleteAllCart(e, id) {
 async function fetchUserCart() {
   const response = await fetch(`${baseUrl}user/all`);
   const user = await response.json();
-  return user[1].list;
+  return user[0].list;
 }
 
 async function updateCart() {
@@ -322,14 +341,14 @@ async function deletePaleta(id) {
       Swal.fire({
         title: "Paleta Deleted!",
         icon: "success",
-        confirmButtonText: "Cool",
+        confirmButtonText: "Ok",
       });
     } else {
       Swal.fire({
         title: "Error!",
         text: "Failed to delete paleta",
         icon: "error",
-        confirmButtonText: "Cool",
+        confirmButtonText: "Ok",
       });
     }
     fetchPaletas();
