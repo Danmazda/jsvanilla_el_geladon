@@ -1,5 +1,5 @@
-// const baseUrl = "http://localhost:3000/";
-const baseUrl = "https://api-elgeladon-danmazda.onrender.com/";
+const baseUrl = "http://localhost:3000/";
+// const baseUrl = "https://api-elgeladon-danmazda.onrender.com/";
 const flavorsSection = document.querySelector("#flavors");
 const flavorsTitle = document.querySelector("h2");
 
@@ -23,6 +23,9 @@ const passwordInput = document.querySelector("[type='password']");
 
 //Admin
 const adminSection = document.querySelector("#admin");
+const searchIdInput = document.querySelector(".searchIdInput");
+const searchIdBt = document.querySelector("#searchIdBt");
+const searchIdResult = document.querySelector(".searchIdResult");
 let token = "";
 
 loginBt.addEventListener("click", () => {
@@ -365,3 +368,24 @@ function showUpdate(e) {
     e.parentElement.parentElement.nextElementSibling.firstChild;
   updateForm.classList.toggle("hidden");
 }
+
+async function fetchPaletaById(id) {
+  const response = await fetch(`${baseUrl}paletas/${id}`);
+  const paleta = await response.json();
+  return paleta[0];
+}
+async function searchPaletaById() {
+  const paleta = await fetchPaletaById(searchIdInput.value);
+  console.log(paleta);
+  searchIdResult.innerHTML = `<div class="container">
+  <img src="${paleta.image}" alt="Paleta Sabor ${paleta.flavor}">
+  <h3>${paleta.flavor}</h3>
+  <p>${paleta.description}</p>
+  <p class="price">R$${paleta.price.toFixed(2)}</p>
+  <p>ID: ${paleta._id}</p>
+  </div>`
+  searchIdResult.classList.toggle("hidden");
+}
+searchIdBt.addEventListener("click", () => {
+  searchPaletaById();
+});

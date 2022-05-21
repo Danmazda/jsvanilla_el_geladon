@@ -36,7 +36,7 @@
       </div>
       <div class="menu">
         <label for="search"><i class="fa-solid fa-magnifying-glass"></i></label>
-        <input type="text" name="search" id="search" />
+        <input type="text" name="search" id="search"  placeholder="Search by name"/>
         <i class="fa-solid fa-cart-shopping cart"></i>
         <div class="update hidden">0</div>
       </div>
@@ -45,7 +45,16 @@
       <section id="admin" class="hidden">
         <div>
           <h2>Admin area</h2>
-          <button class="logOut" onclick="logOut()">log Out</button>
+          <div class="adminMenu">
+            <fieldset class="searchId">
+              <label for="searchId">Search by Id: </label>
+              <input type="text" name="searchId" class="searchIdInput"  />
+              <button id="searchIdBt">search</button>
+            </fieldset>
+
+            <button class="logOut" onclick="logOut()">log Out</button>
+          </div>
+          <div class="searchIdResult hidden"></div>
         </div>
         <form action="/" method="post">
           <h3>Create new Paleta:</h3>

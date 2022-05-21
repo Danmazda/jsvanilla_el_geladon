@@ -196,12 +196,20 @@ footer {
   display: flex;
   justify-content: center;
 }
+.adminMenu{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.searchId {
+  flex-direction: row;
+}
 .cartMenu {
-  position: absolute;
-  right: 0;
-  top: 0.5em;
+  position: fixed;
+  right: 1em;
+  bottom: 0.3em;
   background-color: #ffff;
-  height: 100vh;
+  height: 95vh;
   width: 50%;
   border-radius: 0.5em;
   display: flex;
