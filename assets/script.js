@@ -1,4 +1,5 @@
-const baseUrl = "http://localhost:3000/";
+// const baseUrl = "http://localhost:3000/";
+const baseUrl = "https://api-elgeladon-danmazda.onrender.com/";
 const flavorsSection = document.querySelector("#flavors");
 const flavorsTitle = document.querySelector("h2");
 
@@ -41,7 +42,6 @@ sendLoginCredential.addEventListener("click", async () => {
   const resObj = await response.json();
   if (resObj.log && resObj.role === "admin") {
     token = resObj.token;
-    console.log(token);
     adminSection.classList.remove("hidden");
     loginMenu.classList.toggle("hidden");
   } else {
@@ -141,7 +141,6 @@ async function deleteAllCart(e, id) {
     },
     body: JSON.stringify({ email: "souza@hotmail.com" }),
   });
-  console.log(response);
   updateCart();
 }
 
@@ -259,6 +258,7 @@ async function fetchPaletasAdmin() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          authorization: `bearer ${token}`,
         },
         body: JSON.stringify(reqBody),
       });
@@ -283,6 +283,7 @@ async function fetchPaletasAdmin() {
   });
 }
 async function logOut() {
+  token = "";
   adminSection.classList.add("hidden");
 }
 
@@ -299,10 +300,12 @@ document.querySelector("form").addEventListener("submit", async (e) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      authorization: `bearer ${token}`,
     },
     body: JSON.stringify(reqBody),
   });
-  if (response.status === 200) {
+  const resObj = await response.json();
+  if (response.status === 200 && resObj.message === "Paleta created!") {
     Swal.fire({
       title: "Paleta Created!",
       icon: "success",
@@ -335,6 +338,7 @@ async function deletePaleta(id) {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        authorization: ` bearer ${token}`,
       },
     });
     if (response.status === 200) {
