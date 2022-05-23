@@ -88,7 +88,7 @@ async function fetchPaletas() {
     <h3>${paleta.flavor}</h3>
     <p>${paleta.description}</p>
     <div class="priceAndAdd">
-      <p class="price">R$${paleta.price.toFixed(2)}</p>
+      <p class="price">U$${paleta.price.toFixed(2)}</p>
       <button onclick="PaletaIDCart('${
         paleta._id
       }')"><i class="fa-solid fa-cart-plus"></i></button>
@@ -113,6 +113,7 @@ async function PaletaIDCart(id, del = false) {
     : (response = await axios.post(`${baseUrl}user/add/${id}`, {
         email: "souza@hotmail.com",
       }));
+
   if (response.status === 200) {
     updateCart();
   }
@@ -170,7 +171,7 @@ async function updateCart() {
       const htmlString = `<div class="itemMenu">
       <img src="${paleta.image}" alt="Paleta Sabor ${paleta.flavor}">
       <h3>${paleta.flavor}</h3>
-      <p class="price">R$${paleta.price.toFixed(2)}</p>
+      <p class="price">U$${paleta.price.toFixed(2)}</p>
       <div class="counterHolder" key='${paleta._id}'>
         <i class="fa-solid fa-plus" onclick="PaletaIDCart('${paleta._id}')"></i>
         <p class="quantity">${quantity}</p>
@@ -191,7 +192,7 @@ async function updateCart() {
     }
   });
   showCounter(user.length);
-  cartTotal.innerText = `Total: R$${total.toFixed(2)}`;
+  cartTotal.innerText = `Total: U$${total.toFixed(2)}`;
 }
 
 //admin
@@ -206,7 +207,7 @@ async function fetchPaletasAdmin() {
     <img src="${paleta.image}" alt="Paleta Sabor ${paleta.flavor}">
     <h3>${paleta.flavor}</h3>
     <p>${paleta.description}</p>
-    <p class="price">R$${paleta.price.toFixed(2)}</p>
+    <p class="price">U$${paleta.price.toFixed(2)}</p>
     <p>ID: ${paleta._id}</p>
     <div class="paletaControl">
       <button onclick="showUpdate(this)">Update</button>
@@ -244,7 +245,7 @@ async function fetchPaletasAdmin() {
     const div = document.createElement("div");
     div.innerHTML = htmlString;
     div.appendChild(divForm);
-    adminSection.insertAdjacentElement("beforeend", div);
+    adminSection.insertAdjacentElement("afterbegin", div);
   });
   document.querySelectorAll(".updateForm").forEach((form) => {
     form.addEventListener("submit", async (e) => {
@@ -375,16 +376,20 @@ async function fetchPaletaById(id) {
   return paleta[0];
 }
 async function searchPaletaById() {
+  searchIdResult.innerHTML = "";
   const paleta = await fetchPaletaById(searchIdInput.value);
-  console.log(paleta);
-  searchIdResult.innerHTML = `<div class="container">
+  if (paleta === undefined) {
+    searchIdResult.innerHTML = `<p>Paleta not found!<p>`;
+  } else {
+    searchIdResult.innerHTML = `<div class="container">
   <img src="${paleta.image}" alt="Paleta Sabor ${paleta.flavor}">
   <h3>${paleta.flavor}</h3>
   <p>${paleta.description}</p>
-  <p class="price">R$${paleta.price.toFixed(2)}</p>
+  <p class="price">U$${paleta.price.toFixed(2)}</p>
   <p>ID: ${paleta._id}</p>
-  </div>`
-  searchIdResult.classList.toggle("hidden");
+  </div>`;
+  }
+  searchIdResult.classList.remove("hidden");
 }
 searchIdBt.addEventListener("click", () => {
   searchPaletaById();

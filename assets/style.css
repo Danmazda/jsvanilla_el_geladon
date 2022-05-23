@@ -15,7 +15,7 @@ html {
 body {
   font-family: "Open Sans", sans-serif;
   padding: 1em;
-  background-color: #e8e6fe;
+  background-color: #080705;
 }
 header {
   display: flex;
@@ -55,18 +55,21 @@ input {
 
 .loginMenu {
   position: absolute;
-  background-color: #50c5ee;
+  background-color: #7272ab;
   border-radius: 1em;
   padding: 0.5em;
-  border: 1px solid black;
   top: 6.5em;
   z-index: 999;
+  box-shadow: 4px 4px 13px 0px #030101bf;
+  -webkit-box-shadow: 4px 4px 13px 0px #030101bf;
+  -moz-box-shadow: 4px 4px 13px 0px #030101bf;
 }
 .title {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-left: 10em;
+  color: aliceblue;
 }
 
 .menu {
@@ -101,11 +104,7 @@ input {
 
 main {
   position: relative;
-  background-image: radial-gradient(
-    farthest-corner at 40px 40px,
-    #50c5ee 60%,
-    #00d4ff80 100%
-  );
+  background-color: #7272ab;
   text-align: center;
   border-radius: 1em;
   padding: 1em;
@@ -121,7 +120,7 @@ main {
 }
 .container {
   position: relative;
-  background-color: #00ffff74;
+  background-color: #7899d4;
   margin: 1em;
   margin-top: 7em;
   border-radius: 1em;
@@ -168,7 +167,7 @@ main {
 fieldset {
   padding: 0.5em;
   border-radius: 1em;
-  background-color: #50c5ee;
+  background-color: #7272ab;
   border: none;
   align-items: center;
   display: flex;
@@ -180,7 +179,7 @@ button {
   padding: 0.4em;
   border: none;
   border-radius: 0.5em;
-  background-color: #8f0791;
+  background-color: #700548;
   color: #ffff;
   font-size: 1.2em;
 }
@@ -196,7 +195,7 @@ footer {
   display: flex;
   justify-content: center;
 }
-.adminMenu{
+.adminMenu {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -208,7 +207,7 @@ footer {
   position: fixed;
   right: 1em;
   bottom: 0.3em;
-  background-color: #ffff;
+  background-color: #9c9b9b;
   height: 95vh;
   width: 50%;
   border-radius: 0.5em;
