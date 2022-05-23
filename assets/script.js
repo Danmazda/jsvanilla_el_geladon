@@ -1,5 +1,5 @@
-const baseUrl = "http://localhost:3000/";
-// const baseUrl = "https://api-elgeladon-danmazda.onrender.com/";
+// const baseUrl = "http://localhost:3000/";
+const baseUrl = "https://api-elgeladon-danmazda.onrender.com/";
 const flavorsSection = document.querySelector("#flavors");
 const flavorsTitle = document.querySelector("h2");
 
