@@ -23,7 +23,10 @@ header {
   margin-bottom: 0.5em;
   justify-content: space-between;
 }
-
+a {
+  text-decoration: none;
+  color: #7272ab;
+}
 header .logo {
   height: 5em;
   transform: rotateZ(35deg);
@@ -194,6 +197,18 @@ button:hover {
 footer {
   display: flex;
   justify-content: center;
+  background-color: #700548;
+  color: #9c9b9b;
+  margin-top: 0.5em;
+  border-radius: 0.5em;
+}
+ul {
+  display: flex;
+  gap: 1em;
+  list-style: none;
+}
+li {
+  text-decoration: none;
 }
 .adminMenu {
   display: flex;
